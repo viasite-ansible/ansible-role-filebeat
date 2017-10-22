@@ -1,7 +1,21 @@
+name: {{ filebeat_hostname }}
+
 filebeat:
   # List of prospectors to fetch data.
   prospectors:
-    {{ filebeat_prospectors | to_json }}
+    {{ filebeat_prospectors | to_yaml | indent(4) }}
+  modules:
+    {{ filebeat_modules | to_yaml | indent(4) }}
+
+
+{% if filebeat_fields_under_root %}
+# Global fields
+  filebeat_fields_under_root: true
+{% if filebeat_fields %}
+  fields:
+    {{ filebeat_fields | to_yaml | indent(4) }}
+{% endif %}
+{% endif %}
 
 # Configure what outputs to use when sending the data collected by the beat.
 # Multiple outputs may be used.
